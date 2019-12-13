@@ -25,14 +25,15 @@ class AnsibleRunner(object):
             doc['directories'] = []
             for i in range(len(self.directories)):
                 doc['directories'].append({'href': "%s%s/%s" % (req.prefix, req.path, self.directories[i])})
+            doc['message'] = 'Provide param refresh=true to update directory listing'
         elif 'playbook' in req.params:
-            r = ansible_runner.run(private_data_dir=os.path.join(self.path, run), **req.params)
+            r = ansible_runner.run(private_data_dir=os.path.join(self.path, run), rotate_artifacts=1, **req.params)
             doc['status'] = {}
             doc['status']['status'] = r.status
             doc['status']['stdout'] = r.stdout.readlines()
             doc['status']['stats'] = r.stats
         else:
-            doc['message'] = 'Supply the name of the playbook as a parameter eg ?playbook=testing.yml'
+            doc['message'] = 'Params are passed to the runner eg playbook=testing.yml'
         resp.body = json.dumps(doc, ensure_ascii=False)
         resp.status = falcon.HTTP_200
 
