@@ -3,4 +3,12 @@
   gather_facts: false
   tasks:
     - debug:
+        msg: "Testing"
+    - debug:
         msg: "Testing_ONE"
+      tags:
+        - one
+    - debug:
+        msg: "Testing_TWO"
+      tags:
+        - two

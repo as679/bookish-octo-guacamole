@@ -11,6 +11,7 @@ class AnsibleRunner(object):
         self.refresh()
 
     def refresh(self):
+        # TODO define and implement sort order
         self.directories = []
         for i in os.listdir(self.path):
             if os.path.isdir(os.path.join(self.path, i)):
@@ -25,7 +26,7 @@ class AnsibleRunner(object):
             for i in range(len(self.directories)):
                 doc['directories'].append({'href': "%s%s/%s" % (req.prefix, req.path, self.directories[i])})
         elif 'playbook' in req.params:
-            r = ansible_runner.run(private_data_dir=os.path.join(self.path, run), playbook=req.params['playbook'])
+            r = ansible_runner.run(private_data_dir=os.path.join(self.path, run), **req.params)
             doc['status'] = {}
             doc['status']['status'] = r.status
             doc['status']['stdout'] = r.stdout.readlines()
