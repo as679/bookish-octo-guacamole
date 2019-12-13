@@ -24,11 +24,14 @@ class AnsibleRunner(object):
             doc['directories'] = []
             for i in range(len(self.directories)):
                 doc['directories'].append({'href': "%s%s/%s" % (req.prefix, req.path, self.directories[i])})
-        else:
-            r = ansible_runner.run(private_data_dir=os.path.join(self.path, run), playbook='playbook.yml')
+        elif 'playbook' in req.params:
+            r = ansible_runner.run(private_data_dir=os.path.join(self.path, run), playbook=req.params['playbook'])
             doc['status'] = {}
             doc['status']['status'] = r.status
+            doc['status']['stdout'] = r.stdout.readlines()
             doc['status']['stats'] = r.stats
+        else:
+            doc['message'] = 'Supply the name of the playbook as a parameter eg ?playbook=testing.yml'
         resp.body = json.dumps(doc, ensure_ascii=False)
         resp.status = falcon.HTTP_200
 
